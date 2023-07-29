@@ -6,14 +6,13 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
-import java.util.Arrays;
 
 public class Main extends Component implements Runnable, ActionListener {
     private JFrame frame;
     private JPanel panel;
     private JMenuBar menuBar;
     private JMenu fileMenu, editMenu, helpMenu;
-    private JMenuItem fileOpen, fileSave, fileExit;
+    private JMenuItem fileOpen, fileSave, fileSaveAs, fileExit;
     private JMenuItem editFind;
     private JMenuItem helpAbout;
     private JTextArea textArea;
@@ -25,6 +24,7 @@ public class Main extends Component implements Runnable, ActionListener {
     // Action commands
     private String openCmd = "OpenCommand";
     private String saveCmd = "SaveCommand";
+    private String saveAsCmd = "SaveAsCommand";
     private String exitCmd = "ExitCommand";
     private String findCmd = "FindCommand";
     private String aboutCmd = "AboutCommand";
@@ -58,9 +58,15 @@ public class Main extends Component implements Runnable, ActionListener {
         fileOpen.setActionCommand(openCmd);
         fileMenu.add(fileOpen);
 
+        fileMenu.addSeparator();
+
         fileSave = new JMenuItem("Save");
         fileSave.setActionCommand(saveCmd);
         fileMenu.add(fileSave);
+
+        fileSaveAs = new JMenuItem("Save As...");
+        fileSaveAs.setActionCommand(saveAsCmd);
+        fileMenu.add(fileSaveAs);
 
         fileMenu.addSeparator();
 
@@ -104,6 +110,7 @@ public class Main extends Component implements Runnable, ActionListener {
         // Action listeners
         fileOpen.addActionListener(this);
         fileSave.addActionListener(this);
+        fileSaveAs.addActionListener(this);
         fileExit.addActionListener(this);
         editFind.addActionListener(this);
         helpAbout.addActionListener(this);
@@ -208,6 +215,60 @@ public class Main extends Component implements Runnable, ActionListener {
                 String title = filename + " - JNote";
                 frame.setTitle(title);
             }
+
+            try {
+                /*
+                 * Create an instance of File, FileWriter, and BufferedWriter
+                 * so we can write the file from the defined filepath
+                 */
+                File file = new File(filepath);
+                FileWriter fw = new FileWriter(file);
+                BufferedWriter bw = new BufferedWriter(fw);
+
+                // Write text from the textArea
+                bw.write(textArea.getText());
+
+                // Close
+                bw.close();
+                fw.close();
+            } catch (FileNotFoundException ex) {
+                System.out.println("Cannot find the file: " + ex.getMessage());
+                ex.printStackTrace();
+                throw new RuntimeException(ex);
+            } catch (IOException ex) {
+                System.out.println("Cannot save the file: " + ex.getMessage());
+                ex.printStackTrace();
+                throw new RuntimeException(ex);
+            }
+        }
+
+        // Save As command
+        if (e.getActionCommand().equals(saveAsCmd)) {
+            // Create an instance of JFileChooser
+            JFileChooser fc = new JFileChooser();
+
+            // Set extension filter
+            FileNameExtensionFilter filter = new FileNameExtensionFilter(
+                    "Text Document", ".txt"
+            );
+            fc.addChoosableFileFilter(filter);
+            fc.setFileFilter(filter);
+
+            // Skip if user cancelled the operation
+            int returnVal = fc.showSaveDialog(this);
+            if (returnVal == JFileChooser.CANCEL_OPTION) {
+                System.out.println("Save command cancelled.");
+                return;
+            }
+
+            // Save data
+            String[] exts = filter.getExtensions();
+            filepath = fc.getSelectedFile().getPath() + exts[0];
+            filename = fc.getSelectedFile().getName();
+
+            // Set application title
+            String title = filename + " - JNote";
+            frame.setTitle(title);
 
             try {
                 /*
