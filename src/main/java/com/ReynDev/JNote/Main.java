@@ -272,7 +272,7 @@ public class Main extends Component implements Runnable, ActionListener {
 
             try {
                 /*
-                 * Create an instance of File, FileWriter, and BufferedWriter
+                 * Create an instance of File, FileWriter, and BufferedWriter,
                  * so we can write the file from the defined filepath
                  */
                 File file = new File(filepath);
@@ -308,7 +308,10 @@ public class Main extends Component implements Runnable, ActionListener {
 
         // About command
         if (e.getActionCommand().equals(aboutCmd)) {
-
+            JOptionPane.showMessageDialog(
+                    null, "JNote app is made by ReynDev",
+                    "About JNote", JOptionPane.INFORMATION_MESSAGE
+            );
         }
     }
 
