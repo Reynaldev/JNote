@@ -237,7 +237,7 @@ public class Main extends Component implements Runnable, ActionListener {
 
         // Exit command
         if (e.getActionCommand().equals(exitCmd)) {
-
+            System.exit(0);
         }
 
         // Find command
