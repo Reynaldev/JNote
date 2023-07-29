@@ -6,6 +6,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
+import java.util.Arrays;
 
 public class Main extends Component implements Runnable, ActionListener {
     private JFrame frame;
@@ -124,6 +125,7 @@ public class Main extends Component implements Runnable, ActionListener {
                     "Text Document", "txt"
             );
             fc.addChoosableFileFilter(filter);
+            fc.setFileFilter(filter);
 
             int returnVal = fc.showOpenDialog(this);
 
@@ -148,20 +150,23 @@ public class Main extends Component implements Runnable, ActionListener {
                  * Create an instance of FileReader and BufferedReader
                  * to read from file we choose from JFileChooser
                  */
-                FileReader file = new FileReader(fc.getSelectedFile());
-                BufferedReader br = new BufferedReader(file);
+                File file = fc.getSelectedFile();
+                FileReader fr = new FileReader(file);
+                BufferedReader br = new BufferedReader(fr);
 
                 // Write the text to textArea
-                textArea.read(br, file);
+                textArea.read(br, fr);
 
                 // Get data
-                filepath = fc.getSelectedFile().getPath();
-                filename = fc.getSelectedFile().getName() + " - JNote";
-                frame.setTitle(filename);
+                filepath = file.getPath();
+                filename = file.getName();
+
+                String title = filename + " - JNote";
+                frame.setTitle(title);
 
                 // Close the reader
                 br.close();
-                file.close();
+                fr.close();
             } catch (FileNotFoundException ex) {
                 System.out.println("Cannot open the file: " + ex.getMessage());
                 ex.printStackTrace();
@@ -175,12 +180,14 @@ public class Main extends Component implements Runnable, ActionListener {
 
         // Save command
         if (e.getActionCommand().equals(saveCmd)) {
-            if (filepath.isEmpty()) {
+            // Check if filepath is null or empty
+            if (filepath == null || filepath.isEmpty()) {
+                // Create an instance of JFileChooser
                 JFileChooser fc = new JFileChooser();
 
                 // Set extension filter
                 FileNameExtensionFilter filter = new FileNameExtensionFilter(
-                        "Text Document", "txt"
+                        "Text Document", ".txt"
                 );
                 fc.addChoosableFileFilter(filter);
                 fc.setFileFilter(filter);
@@ -191,6 +198,40 @@ public class Main extends Component implements Runnable, ActionListener {
                     System.out.println("Save command cancelled.");
                     return;
                 }
+
+                // Save data
+                String[] exts = filter.getExtensions();
+                filepath = fc.getSelectedFile().getPath() + exts[0];
+                filename = fc.getSelectedFile().getName();
+
+                // Set application title
+                String title = filename + " - JNote";
+                frame.setTitle(title);
+            }
+
+            try {
+                /*
+                 * Create an instance of File, FileWriter, and BufferedWriter
+                 * so we can write the file from the defined filepath
+                 */
+                File file = new File(filepath);
+                FileWriter fw = new FileWriter(file);
+                BufferedWriter bw = new BufferedWriter(fw);
+
+                // Write text from the textArea
+                bw.write(textArea.getText());
+
+                // Close
+                bw.close();
+                fw.close();
+            } catch (FileNotFoundException ex) {
+                System.out.println("Cannot find the file: " + ex.getMessage());
+                ex.printStackTrace();
+                throw new RuntimeException(ex);
+            } catch (IOException ex) {
+                System.out.println("Cannot save the file: " + ex.getMessage());
+                ex.printStackTrace();
+                throw new RuntimeException(ex);
             }
         }
 
