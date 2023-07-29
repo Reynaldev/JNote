@@ -1,6 +1,7 @@
 package com.ReynDev.JNote;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -113,9 +114,17 @@ public class Main extends Component implements Runnable, ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        // Open Command
         if (e.getActionCommand().equals(openCmd)) {
             // Create an instance of JFileChooser
             JFileChooser fc = new JFileChooser();
+
+            // Set extension filter
+            FileNameExtensionFilter filter = new FileNameExtensionFilter(
+                    "Text Document", "txt"
+            );
+            fc.addChoosableFileFilter(filter);
+
             int returnVal = fc.showOpenDialog(this);
 
             // Skip if the user cancelled the operation
@@ -124,9 +133,18 @@ public class Main extends Component implements Runnable, ActionListener {
                 return;
             }
 
+            // Skip if the file is not exist
+            if (!fc.getSelectedFile().exists()) {
+                JOptionPane.showMessageDialog(
+                        null, "Cannot find or open the file.",
+                        "Error", JOptionPane.ERROR_MESSAGE
+                );
+                return;
+            }
+
             // Read texts from file
             try {
-                /**
+                /*
                  * Create an instance of FileReader and BufferedReader
                  * to read from file we choose from JFileChooser
                  */
@@ -141,8 +159,9 @@ public class Main extends Component implements Runnable, ActionListener {
                 filename = fc.getSelectedFile().getName() + " - JNote";
                 frame.setTitle(filename);
 
-                // Close the BufferedReader
+                // Close the reader
                 br.close();
+                file.close();
             } catch (FileNotFoundException ex) {
                 System.out.println("Cannot open the file: " + ex.getMessage());
                 ex.printStackTrace();
@@ -154,18 +173,38 @@ public class Main extends Component implements Runnable, ActionListener {
             }
         }
 
+        // Save command
         if (e.getActionCommand().equals(saveCmd)) {
+            if (filepath.isEmpty()) {
+                JFileChooser fc = new JFileChooser();
 
+                // Set extension filter
+                FileNameExtensionFilter filter = new FileNameExtensionFilter(
+                        "Text Document", "txt"
+                );
+                fc.addChoosableFileFilter(filter);
+                fc.setFileFilter(filter);
+
+                // Skip if user cancelled the operation
+                int returnVal = fc.showSaveDialog(this);
+                if (returnVal == JFileChooser.CANCEL_OPTION) {
+                    System.out.println("Save command cancelled.");
+                    return;
+                }
+            }
         }
 
+        // Exit command
         if (e.getActionCommand().equals(exitCmd)) {
 
         }
 
+        // Find command
         if (e.getActionCommand().equals(findCmd)) {
 
         }
 
+        // About command
         if (e.getActionCommand().equals(aboutCmd)) {
 
         }
