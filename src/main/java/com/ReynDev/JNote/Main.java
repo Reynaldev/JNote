@@ -303,7 +303,28 @@ public class Main extends Component implements Runnable, ActionListener {
 
         // Find command
         if (e.getActionCommand().equals(findCmd)) {
+            // Dialog to handle text input
+            String text = JOptionPane.showInputDialog(
+                    null, "Text to find",
+                    "Find text", JOptionPane.PLAIN_MESSAGE
+            );
 
+            // Skip if the text doesn't found
+            if (!textArea.getText().contains(text)) {
+                JOptionPane.showMessageDialog(
+                        null, "\" " + text + "\" text didn't found.",
+                        "Error", JOptionPane.ERROR_MESSAGE
+                );
+
+                return;
+            }
+
+            // Get the first and last index
+            int firstIndex = textArea.getText().indexOf(text);
+            int lastIndex = firstIndex + text.length();
+
+            // Make a selection
+            textArea.select(firstIndex, lastIndex);
         }
 
         // About command
