@@ -4,9 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="deadebb0-2a6e-4cbc-8f0d-cc362ab9f094" name="Changes" comment="Update&#10;&#10;New&#10;- Added &quot;Save As&quot; to save the current file into different file">
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+    <list default="true" id="deadebb0-2a6e-4cbc-8f0d-cc362ab9f094" name="Changes" comment="Update&#10;&#10;New&#10;- Added the ability to find a text">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/ReynDev/JNote/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ReynDev/JNote/Main.java" afterDir="false" />
     </list>
@@ -121,7 +119,15 @@
       <option name="project" value="LOCAL" />
       <updated>1690634009938</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Update&#10;&#10;New&#10;- Added the ability to find a text">
+      <option name="closed" value="true" />
+      <created>1690725444045</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1690725444045</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -130,6 +136,7 @@
     <MESSAGE value="Update&#10;&#10;New&#10;- Ability to save a new file or current file" />
     <MESSAGE value="Update&#10;&#10;New&#10;- Ability to exit" />
     <MESSAGE value="Update&#10;&#10;New&#10;- Added &quot;Save As&quot; to save the current file into different file" />
-    <option name="LAST_COMMIT_MESSAGE" value="Update&#10;&#10;New&#10;- Added &quot;Save As&quot; to save the current file into different file" />
+    <MESSAGE value="Update&#10;&#10;New&#10;- Added the ability to find a text" />
+    <option name="LAST_COMMIT_MESSAGE" value="Update&#10;&#10;New&#10;- Added the ability to find a text" />
   </component>
 </project>
