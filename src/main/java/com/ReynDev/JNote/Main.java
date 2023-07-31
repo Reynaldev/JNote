@@ -10,6 +10,7 @@ import java.io.*;
 public class Main extends Component implements Runnable, ActionListener {
     private JFrame frame;
     private JPanel panel;
+    private JLabel lineStatus;
     private JMenuBar menuBar;
     private JMenu fileMenu, editMenu, helpMenu;
     private JMenuItem fileOpen, fileSave, fileSaveAs, fileExit;
@@ -99,13 +100,27 @@ public class Main extends Component implements Runnable, ActionListener {
 
         // Main text area
         textArea = new JTextArea();
+        JScrollPane spTextArea = new JScrollPane(
+                textArea,
+                ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
+                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
         ctr.fill = GridBagConstraints.BOTH;
         ctr.weightx = 1;
         ctr.weighty = 1;
         ctr.gridx = 0;
         ctr.gridy = 0;
-        panel.add(textArea, ctr);
+        panel.add(spTextArea, ctr);
+
+        // Line-Row position
+        lineStatus = new JLabel("0:0");
+
+        ctr = new GridBagConstraints();
+        ctr.insets = new Insets(2, 2, 2, 2);
+        ctr.anchor = GridBagConstraints.EAST;
+        ctr.gridx = 0;
+        ctr.gridy = 1;
+        panel.add(lineStatus, ctr);
 
         // Action listeners
         fileOpen.addActionListener(this);
@@ -189,7 +204,31 @@ public class Main extends Component implements Runnable, ActionListener {
         if (e.getActionCommand().equals(saveCmd)) {
             // Check if filepath is null or empty
             if (filepath == null || filepath.isEmpty()) {
-                save();
+                // Create an instance of JFileChooser
+                JFileChooser fc = new JFileChooser();
+
+                // Set extension filter
+                FileNameExtensionFilter filter = new FileNameExtensionFilter(
+                        "Text Document", ".txt"
+                );
+                fc.addChoosableFileFilter(filter);
+                fc.setFileFilter(filter);
+
+                // Skip if user cancelled the operation
+                int returnVal = fc.showSaveDialog(this);
+                if (returnVal == JFileChooser.CANCEL_OPTION) {
+                    System.out.println("Save command cancelled.");
+                    return;
+                }
+
+                // Save data
+                String[] exts = filter.getExtensions();
+                filepath = fc.getSelectedFile().getPath() + exts[0];
+                filename = fc.getSelectedFile().getName();
+
+                // Set application title
+                String title = filename + " - JNote";
+                frame.setTitle(title);
             }
 
             try {
@@ -220,7 +259,31 @@ public class Main extends Component implements Runnable, ActionListener {
 
         // Save As command
         if (e.getActionCommand().equals(saveAsCmd)) {
-            save();
+            // Create an instance of JFileChooser
+            JFileChooser fc = new JFileChooser();
+
+            // Set extension filter
+            FileNameExtensionFilter filter = new FileNameExtensionFilter(
+                    "Text Document", ".txt"
+            );
+            fc.addChoosableFileFilter(filter);
+            fc.setFileFilter(filter);
+
+            // Skip if user cancelled the operation
+            int returnVal = fc.showSaveDialog(this);
+            if (returnVal == JFileChooser.CANCEL_OPTION) {
+                System.out.println("Save command cancelled.");
+                return;
+            }
+
+            // Save data
+            String[] exts = filter.getExtensions();
+            filepath = fc.getSelectedFile().getPath() + exts[0];
+            filename = fc.getSelectedFile().getName();
+
+            // Set application title
+            String title = filename + " - JNote";
+            frame.setTitle(title);
 
             try {
                 /*
@@ -290,34 +353,6 @@ public class Main extends Component implements Runnable, ActionListener {
                     "About JNote", JOptionPane.INFORMATION_MESSAGE
             );
         }
-    }
-
-    public void save() {
-        // Create an instance of JFileChooser
-        JFileChooser fc = new JFileChooser();
-
-        // Set extension filter
-        FileNameExtensionFilter filter = new FileNameExtensionFilter(
-                "Text Document", ".txt"
-        );
-        fc.addChoosableFileFilter(filter);
-        fc.setFileFilter(filter);
-
-        // Skip if user cancelled the operation
-        int returnVal = fc.showSaveDialog(this);
-        if (returnVal == JFileChooser.CANCEL_OPTION) {
-            System.out.println("Save command cancelled.");
-            return;
-        }
-
-        // Save data
-        String[] exts = filter.getExtensions();
-        filepath = fc.getSelectedFile().getPath() + exts[0];
-        filename = fc.getSelectedFile().getName();
-
-        // Set application title
-        String title = filename + " - JNote";
-        frame.setTitle(title);
     }
 
     public static void main(String[] args) {
